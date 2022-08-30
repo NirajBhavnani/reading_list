@@ -16,21 +16,36 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import CreateBookForm from '@/components/CreateBookForm'
+import { ref } from "vue";
+import CreateBookForm from "@/components/CreateBookForm";
+
+// firebase imports
+import { firestore } from "../firebase/config";
+import { collection, getDocs } from "firebase/firestore";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: { CreateBookForm },
   setup() {
-    const books = ref([
-      { title: 'name of the wind', author: 'patrick rothfuss', isFav: false, id: '1' },
-      { title: 'the way of kings', author: 'brandon sanderson', isfav: false, id: '2' }
-    ])
+    const books = ref([]);
 
-    return { books }
-  }
-}
+    // in v9, we declare collection ref like this
+    const colRef = collection(firestore, "books");
+
+    // fetching docs from collection
+    getDocs(colRef)
+      .then((snapshot) => {
+        let docs = [];
+        snapshot.docs.forEach((doc) => {
+          docs.push({ ...doc.data(), id: doc.id });
+        });
+        books.value = docs;
+      })
+      .catch((err) => console.log(err.message));
+
+    return { books };
+  },
+};
 </script>
 
 <style>
