@@ -20,15 +20,22 @@
 
 <script>
 import getCollection from "../composables/getCollection";
+import getUser from "../composables/getUser";
 import CreateBookForm from "@/components/CreateBookForm";
 
 import { firestore } from "../firebase/config";
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 
+import { useRouter } from "vue-router";
+import { watchEffect } from "vue";
+
 export default {
   name: "Home",
   components: { CreateBookForm },
   setup() {
+    const { user } = getUser();
+    const router = useRouter();
+
     const { documents: books } = getCollection("books");
 
     const handleDelete = (book) => {
@@ -44,6 +51,13 @@ export default {
         isFav: !book.isFav,
       });
     };
+
+    // resolving the issue when user clicks on logout and is still on the home page
+    watchEffect(() => {
+      if (!user.value) {
+        router.push("/login");
+      }
+    });
 
     return { books, handleDelete, handleUpdate };
   },
