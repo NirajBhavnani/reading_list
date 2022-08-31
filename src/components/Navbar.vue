@@ -4,32 +4,39 @@
       <h1>My Book List</h1>
 
       <!-- for logged in users -->
-      <div>
+      <div v-if="user">
         <router-link to="/">Home</router-link>
         <button @click="handleLogout">Logout</button>
       </div>
 
       <!-- for logged out users -->
-      <div>
+      <div v-if="!user">
         <router-link to="/login">Login</router-link>
         <router-link to="/signup">Signup</router-link>
       </div>
     </nav>
+
+    <!-- show user email -->
+    <p v-if="user">logged in as {{ user.email }}</p>
   </div>
 </template>
 
 <script>
+import getUser from "../composables/getUser";
+
 // firebase imports
 import { auth } from "../firebase/config";
 import { signOut } from "firebase/auth";
 
 export default {
   setup() {
+    const { user } = getUser();
+
     const handleLogout = () => {
       signOut(auth);
     };
 
-    return { handleLogout };
+    return { handleLogout, user };
   },
 };
 </script>
