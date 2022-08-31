@@ -36,7 +36,11 @@ export default {
     const { user } = getUser();
     const router = useRouter();
 
-    const { documents: books } = getCollection("books");
+    const { documents: books } = getCollection("books", [
+      "userUid",
+      "==",
+      user.value.uid,
+    ]);
 
     const handleDelete = (book) => {
       const docRef = doc(firestore, "books", book.id); //fetching docRef using doc()

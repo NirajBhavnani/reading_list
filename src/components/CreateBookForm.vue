@@ -16,9 +16,12 @@
 import { ref } from "vue";
 import { firestore } from "../firebase/config";
 import { collection, addDoc } from "firebase/firestore";
+import getUser from "../composables/getUser";
 
 export default {
   setup() {
+    const { user } = getUser();
+
     const title = ref("");
     const author = ref("");
 
@@ -28,6 +31,7 @@ export default {
         title: title.value,
         author: author.value,
         isFav: false,
+        userUid: user.value.uid,
       });
 
       // reset the form

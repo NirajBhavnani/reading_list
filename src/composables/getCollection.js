@@ -2,13 +2,18 @@ import { ref, watchEffect } from "vue";
 
 // firebase imports
 import { firestore } from "../firebase/config";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 
-const getCollection = (c) => {
+const getCollection = (c, q) => {
   const documents = ref(null);
 
   // collection reference
   let colRef = collection(firestore, c);
+
+  // Using query
+  if (q) {
+    colRef = query(colRef, where(...q));
+  }
 
   // real-time listener in v9
   const unsubscribe = onSnapshot(colRef, (snapshot) => {
