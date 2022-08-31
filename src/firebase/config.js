@@ -1,6 +1,7 @@
 // In firebase v9, we just import the functions which will be used in the project
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore"; //importing firestore service in v9
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAPHvdvRAdYNdtXVkNsLxAt9hNmiEwK0bo",
@@ -16,5 +17,6 @@ initializeApp(firebaseConfig);
 
 // init services
 const firestore = getFirestore();
+const auth = getAuth();
 
-export { firestore };
+export { firestore, auth };
